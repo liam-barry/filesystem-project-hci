@@ -134,10 +134,19 @@ export function CDCarousel() {
   );
 }
 
+function Preview() {
+  return (
+    <div className="preview-container">
+      <div className="preview-label">Disc Preview</div>
+    </div>
+  );
+}
+
 function App() {
   return (
     <header className="App-header">
       <CDCarousel />
+      <Preview />
     </header>
   );
 }
