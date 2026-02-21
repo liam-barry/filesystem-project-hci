@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,36 @@
   to {
     transform: rotate(360deg);
   }
+} */
+.carousel-container {
+  position: relative;
+  height: 100vh;
+  width: 400px;
+  left: 40%;
+}
+
+.wheel {
+  position: absolute;
+  left: 150px;
+  top: 50%;
+  transform-origin: right center;
+  transition: transform 0.6s ease;
+}
+
+.cd {
+  position: absolute;
+  width: 100px;
+  transition: transform 0.6s ease;
+}
+
+.arrow1 {
+  position: absolute;
+  left: 20px;
+  top: 14%;
+}
+
+.arrow2 {
+  position: absolute;
+  left: 20px;
+  top: 86%;
 }
