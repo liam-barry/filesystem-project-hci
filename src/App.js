@@ -105,7 +105,16 @@ function getIcon(item) {
 export function CDCarousel() {
   const [startIndex, setStartIndex] = useState(0);
   const [currentPath, setCurrentPath] = useState([]);
+  const [hiddenIndex, setHiddenIndex] = useState(null);
   const [allItems] = useState(initialRacks);
+
+  function hideImage(index) {
+    setHiddenIndex(index);
+
+    setTimeout(() => {
+      setHiddenIndex(null); // show it again
+    }, 325);
+  }
 
   // look inside of the current folder
   let currentItems = allItems;
@@ -124,12 +133,33 @@ export function CDCarousel() {
 
   const angleStep = currentItems.length > 1 ? 180 / (visibleIconsCount - 1) : 0;
 
+  // const handleUp = () => {
+  //   setStartIndex(prev => (prev + 1) % currentItems.length);
+  // };
+
+  // const handleDown = () => {
+  //   setStartIndex(prev => (prev - 1 + currentItems.length) % currentItems.length);
+  // };
   const handleUp = () => {
-    setStartIndex(prev => (prev + 1) % currentItems.length);
+    setStartIndex(prev => {
+      const newStart = (prev + 1) % currentItems.length;
+      // the icon that just entered on the right
+      const enteringIndex = (newStart + visibleIconsCount - 1) % currentItems.length;
+      hideImage(enteringIndex);
+
+      return newStart;
+    });
   };
 
   const handleDown = () => {
-    setStartIndex(prev => (prev - 1 + currentItems.length) % currentItems.length);
+    setStartIndex(prev => {
+      const newStart = (prev - 1 + currentItems.length) % currentItems.length;
+      // the icon that entered on the left
+      const enteringIndex = newStart;
+      hideImage(enteringIndex);
+
+      return newStart;
+    });
   };
 
   const handleItemClick = (item) => {
@@ -147,7 +177,7 @@ export function CDCarousel() {
   return (
     <div className="carousel-container">
       {currentPath.length > 0 && (
-        <button onClick={handleBack}>← Back</button>
+        <button className="back-button" onClick={handleBack}>← Back</button>
       )}
       <h2>{currentPath.length === 0 ? "Library" : allItems.find(i => i.id === currentPath[currentPath.length - 1])?.name || "Folder"}</h2>
 
@@ -157,6 +187,7 @@ export function CDCarousel() {
         {visibleItems.map((item, i) => {
           const angle = -90 + i * angleStep;
           const scale = Math.abs(angle) < 20 ? 1.4 : 0.9;
+          const realIndex = (startIndex + i) % currentItems.length;
 
           return (
             <img
@@ -166,6 +197,7 @@ export function CDCarousel() {
               alt={item.name}
               onClick={() => handleItemClick(item)}
               style={{
+                visibility: hiddenIndex === realIndex ? "hidden" : "visible",
                 transform: `rotate(${angle}deg) translateX(250px) rotate(${-angle}deg) scale(${scale})`
               }}
             />

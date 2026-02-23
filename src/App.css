@@ -87,6 +87,19 @@
   transition: transform 0.6s ease;
 }
 
+.back-button {
+  position: absolute;
+  left: 20px;
+  top: 350px;
+  padding: 8px 12px;
+  background: #5c6b73;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
 .cd {
   position: absolute;
   width: 100px;
