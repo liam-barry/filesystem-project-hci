@@ -1,55 +1,8 @@
-// import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from "react";
 import discIcon from "./assets/discIcon.png";
 import emptyRack from "./assets/emptyRack.png";
 import fullRack from "./assets/fullRack.png";
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// function CD() {
-//   return (
-//     <img
-//       src="icons/cd.png"
-//       alt="CD icon"
-//     />
-//   );
-// }
-// function CD_Rack() {
-//   return (
-//     <img
-//       src="icons/cd_rack.png"
-//       alt="CD Rack icon"
-//     />
-//   );
-// }
-// function Rack_spinner() {
-//   return (
-//     <img
-//       src="icons/rack_spinner.png"
-//       alt="Rack spinner icon"
-//     />
-//   );
-// }
 
 function Icon({ className, src, alt, onClick}) {
   return (
@@ -218,21 +171,15 @@ export function CDCarousel({ allItems, onCenterItemChange, onItemsChange }) {
     setStartIndex((prev) => prev % currentItems.length);
   }, [currentItems.length]);
 
-  // const handleUp = () => {
-  //   setStartIndex(prev => (prev + 1) % currentItems.length);
-  // };
-
-  // const handleDown = () => {
-  //   setStartIndex(prev => (prev - 1 + currentItems.length) % currentItems.length);
-  // };
   const handleUp = () => {
     if (currentItems.length === 0) return;
-
     setStartIndex(prev => {
       const newStart = (prev + 1) % currentItems.length;
       // the icon that just entered on the right
       const enteringIndex = (newStart + visibleIconsCount - 1) % currentItems.length;
-      hideImage(enteringIndex);
+      if (currentItems.length > 1) {
+        hideImage(enteringIndex);
+      }
 
       return newStart;
     });
@@ -244,8 +191,10 @@ export function CDCarousel({ allItems, onCenterItemChange, onItemsChange }) {
     setStartIndex(prev => {
       const newStart = (prev - 1 + currentItems.length) % currentItems.length;
       // the icon that entered on the left
-      const enteringIndex = newStart;
-      hideImage(enteringIndex);
+      if(currentItems.length > 1) {
+        const enteringIndex = newStart;
+        hideImage(enteringIndex);
+      }
 
       return newStart;
     });
@@ -343,7 +292,7 @@ export function CDCarousel({ allItems, onCenterItemChange, onItemsChange }) {
               style={{
                 cursor: item.type === "rack" ? "pointer" : "default",
                 visibility: hiddenIndex === realIndex ? "hidden" : "visible",
-                transform: `rotate(${angle}deg) translateX(var(--orbit-radius)) rotate(${-angle}deg) scale(${scale})`
+                transform: `rotate(${angle}deg) translateX(250px) rotate(${-angle}deg) scale(${scale})`
               }}
             >
               <img
