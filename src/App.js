@@ -201,7 +201,9 @@ export function CDCarousel({ allItems, onCenterItemChange, onItemsChange }) {
     (_, i) => currentItems[(startIndex + i) % currentItems.length]
   );
 
-  const angleStep = currentItems.length > 1 ? 180 / (visibleIconsCount - 1) : 0;
+  const angleStep = currentItems.length > 1
+    ? 180 / (visibleIconsCount % 2 === 0 ? visibleIconsCount : (visibleIconsCount - 1))
+    : 0;
 
   useEffect(() => {
     onCenterItemChange(centerItem);
@@ -329,7 +331,7 @@ export function CDCarousel({ allItems, onCenterItemChange, onItemsChange }) {
 
       <div className="wheel">
         {visibleItems.map((item, i) => {
-          const angle = -90 + i * angleStep;
+          const angle = (i - centerOffset) * angleStep;
           const scale = Math.abs(angle) < 20 ? 1.4 : 0.9;
           const realIndex = (startIndex + i) % currentItems.length;
 
@@ -341,7 +343,7 @@ export function CDCarousel({ allItems, onCenterItemChange, onItemsChange }) {
               style={{
                 cursor: item.type === "rack" ? "pointer" : "default",
                 visibility: hiddenIndex === realIndex ? "hidden" : "visible",
-                transform: `rotate(${angle}deg) translateX(250px) rotate(${-angle}deg) scale(${scale})`
+                transform: `rotate(${angle}deg) translateX(var(--orbit-radius)) rotate(${-angle}deg) scale(${scale})`
               }}
             >
               <img
