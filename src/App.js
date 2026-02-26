@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import discIcon from "./assets/discIcon.png";
 import emptyRack from "./assets/emptyRack.png";
 import fullRack from "./assets/fullRack.png";
+import topArrow from "./assets/top-arrow.png";
+import bottomArrow from "./assets/bottom-arrow.png";
 
 function Icon({ className, src, alt, onClick}) {
   return (
@@ -276,7 +278,7 @@ export function CDCarousel({ allItems, onCenterItemChange, onItemsChange }) {
         <h2>{currentPath.length === 0 ? "Library" : currentRack?.name || "Folder"}</h2>
       </div>
 
-      <Icon className="arrow1" src="/arrow-left.png" alt="Left Arrow" onClick={handleUp} />
+      <Icon className="arrow1" src={topArrow} alt="Left Arrow" onClick={handleUp} />
 
       <div className="wheel">
         {visibleItems.map((item, i) => {
@@ -344,7 +346,7 @@ export function CDCarousel({ allItems, onCenterItemChange, onItemsChange }) {
         </div>
       )}
 
-      <Icon className="arrow2" src="/arrow-right.png" alt="Right Arrow" onClick={handleDown} />
+      <Icon className="arrow2" src={bottomArrow} alt="Right Arrow" onClick={handleDown} />
     </div>
   );
 }

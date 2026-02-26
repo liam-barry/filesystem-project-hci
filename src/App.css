@@ -285,10 +285,16 @@
   position: absolute;
   left: 20px;
   top: 14%;
+  width: 80px;
+  height: 80px;
+  padding-left: 80px;
 }
 
 .arrow2 {
   position: absolute;
   left: 20px;
   top: 86%;
+  width: 80px;
+  height: 80px;
+  padding-left: 80px;
 }
