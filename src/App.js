@@ -5,12 +5,21 @@ import emptyRack from "./assets/emptyRack.png";
 import fullRack from "./assets/fullRack.png";
 import topArrow from "./assets/top-arrow.png";
 import bottomArrow from "./assets/bottom-arrow.png";
+import transparentDiscIcon from "./assets/transparentDisc.png";
 
 function Icon({ className, src, alt, onClick}) {
   return (
     <img className={className} src={src} alt={alt} onClick={onClick} style={{cursor: "pointer"}} />
   );
 }
+
+const placeholderDisc = (idSuffix) => ({
+  id: `placeholder-${Date.now()}-${idSuffix}`,
+  name: "",
+  type: "disc",
+  placeholder: true,
+});
+
 // File/Folder data structure
 const initialRacks = [
   { id: "rack1", name: "Rock Collection", type: "rack", children: [
@@ -26,66 +35,50 @@ const initialRacks = [
     { id: "disc7", name: "Disc 7", type: "disc" },
     { id: "disc8", name: "Disc 8", type: "disc" },
     { id: "disc9", name: "Disc 9", type: "disc" },
-    { id: "disc10", name: "Disc 10", type: "disc" },
-    { id: "disc11", name: "Disc 11", type: "disc" },
-    { id: "disc12", name: "Disc 12", type: "disc" },
     ]
   },
   { id: "rack3", name: "Pop Hits", type: "rack", children: [] },
   { id: "rack4", name: "Classical", type: "rack", children: [
       { id: "rack5", name: "Symphonies", type: "rack", children: [
+          { id: "disc10", name: "Disc 10", type: "disc" },
+          { id: "disc11", name: "Disc 11", type: "disc" },
+          { id: "disc12", name: "Disc 12", type: "disc" },
           { id: "disc13", name: "Disc 13", type: "disc" },
-          { id: "disc14", name: "Disc 14", type: "disc" },
-          { id: "disc15", name: "Disc 15", type: "disc" },
-          { id: "disc16", name: "Disc 16", type: "disc" },
-          { id: "disc17", name: "Disc 17", type: "disc" },
-          { id: "disc18", name: "Disc 18", type: "disc" },
         ]
       },
     ]
   },
   { id: "rack6", name: "Electronic", type: "rack", children: [
-      { id: "disc19", name: "Disc 19", type: "disc" },
-      { id: "disc20", name: "Disc 20", type: "disc" },
-      { id: "disc21", name: "Disc 21", type: "disc" },
-      { id: "disc22", name: "Disc 22", type: "disc" },
-      { id: "disc23", name: "Disc 23", type: "disc" },
-      { id: "disc24", name: "Disc 24", type: "disc" },
+      { id: "disc14", name: "Disc 14", type: "disc" },
+      { id: "disc15", name: "Disc 15", type: "disc" },
+      { id: "disc16", name: "Disc 16", type: "disc" },
+      { id: "disc17", name: "Disc 17", type: "disc" },
     ]
   },
   { id: "rack7", name: "Hip Hop", type: "rack", children: [] },
   { id: "rack8", name: "Country", type: "rack", children: [
-      { id: "disc25", name: "Disc 25", type: "disc" },
-      { id: "disc26", name: "Disc 26", type: "disc" },
-      { id: "disc27", name: "Disc 27", type: "disc" },
-      { id: "disc28", name: "Disc 28", type: "disc" },
-      { id: "disc29", name: "Disc 29", type: "disc" },
-      { id: "disc30", name: "Disc 30", type: "disc" },
+      { id: "disc18", name: "Disc 18", type: "disc" },
     ]
   },
   { id: "rack9", name: "Blues", type: "rack", children: [
-      { id: "disc31", name: "Disc 31", type: "disc" },
-      { id: "disc32", name: "Disc 32", type: "disc" },
-      { id: "disc33", name: "Disc 33", type: "disc" },
-      { id: "disc34", name: "Disc 34", type: "disc" },
-      { id: "disc35", name: "Disc 35", type: "disc" },
-      { id: "disc36", name: "Disc 36", type: "disc" },
+      { id: "disc19", name: "Disc 19", type: "disc" },
+      { id: "disc20", name: "Disc 20", type: "disc" },
     ]
   },
   { id: "rack10", name: "Metal", type: "rack", children: [] },
   { id: "rack11", name: "Folk", type: "rack", children: [
-      { id: "disc37", name: "Disc 37", type: "disc" },
-      { id: "disc38", name: "Disc 38", type: "disc" },
-      { id: "disc39", name: "Disc 39", type: "disc" },
-      { id: "disc40", name: "Disc 40", type: "disc" },
-      { id: "disc41", name: "Disc 41", type: "disc" },
-      { id: "disc42", name: "Disc 42", type: "disc" },
+      { id: "disc21", name: "Disc 21", type: "disc" },
+      { id: "disc22", name: "Disc 22", type: "disc" },
+      { id: "disc23", name: "Disc 23", type: "disc" },
     ]
   },
 ];
 
 function getIcon(item) {
-  if (item.type === "disc") return discIcon;
+  if (item.type === "disc") {
+    if (item.placeholder) return transparentDiscIcon;
+    return discIcon;
+  }
   if (item.type === "rack") {
     return (item.children && item.children.length > 0) ? fullRack : emptyRack;
   }
@@ -172,13 +165,18 @@ export function CDCarousel({ allItems, onCenterItemChange, onItemsChange }) {
     setHiddenIndex(index);
 
     setTimeout(() => {
-      setHiddenIndex(null); // show it again
+      setHiddenIndex(null); 
     }, 325);
   }
 
-  // look inside of the current folder
   const currentItems = getCurrentItemsFromPath(allItems, currentPath);
   const currentRack = getItemFromPath(allItems, currentPath);
+  if (currentRack?.type === "rack") {
+    const placeholdersNeeded = 6 - currentItems.length;
+    for (let i = 0; i < placeholdersNeeded; i++) {
+      currentItems.push({ ...placeholderDisc(i) });
+    }
+  }
 
   const visibleIconsCount = Math.min(5, currentItems.length);
   const centerOffset = Math.floor(visibleIconsCount / 2);
@@ -211,7 +209,6 @@ export function CDCarousel({ allItems, onCenterItemChange, onItemsChange }) {
     if (currentItems.length === 0) return;
     setStartIndex(prev => {
       const newStart = (prev + 1) % currentItems.length;
-      // the icon that just entered on the right
       if (currentItems.length > 1) {
         const enteringIndex = (newStart + visibleIconsCount - 1) % currentItems.length;
         hideImage(enteringIndex);
@@ -226,7 +223,6 @@ export function CDCarousel({ allItems, onCenterItemChange, onItemsChange }) {
 
     setStartIndex(prev => {
       const newStart = (prev - 1 + currentItems.length) % currentItems.length;
-      // the icon that entered on the left
       if(currentItems.length > 1) {
         hideImage(newStart);
       }
@@ -273,10 +269,20 @@ export function CDCarousel({ allItems, onCenterItemChange, onItemsChange }) {
       id: `${idPrefix}-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
       name: itemName,
       type: newItemType,
-      ...(newItemType === "rack" ? { children: [] } : {}),
+      children: newItemType === "rack" 
+        ? Array.from({ length: 6 }, (_, i) => placeholderDisc(i))
+        : undefined,
     };
 
-    const updatedItems = updateItemsAtPath(allItems, currentPath, (items) => [...items, newItem]);
+    const updatedItems = updateItemsAtPath(allItems, currentPath, (items) => {
+      const placeholderIndex = items.findIndex(item => item.placeholder);
+      if (placeholderIndex !== -1) {
+        const newItems = [...items];
+        newItems[placeholderIndex] = newItem;
+        return newItems;
+      }
+      return [...items, newItem];
+    });
     onItemsChange(updatedItems);
     setIsAddFormOpen(false);
   };
